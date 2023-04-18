@@ -1,2 +1,4 @@
-import Task from './modules/task';
+import Display from './modules/display';
+
+document.addEventListener('DOMContentLoaded', Display.loadHomepage);
 

@@ -1,3 +1,5 @@
+import { isToday, isThisWeek } from 'date-fns'
+
 export default class Project {
   tasks = new Map();
 
@@ -5,16 +7,8 @@ export default class Project {
     this.name = name;
   }
 
-  setName(name) {
-    this.name = name;
-  }
-
-  getName() {
-    return this.name;
-  }
-
   getTasks() {
-    return this.tasks;
+    return Array.from(tasks.values());
   }
 
   getTask(id) {
@@ -22,7 +16,7 @@ export default class Project {
   }
 
   addTask(task) {
-
+    this.tasks.set(task.id, task);
   }
 
   deleteTask(id) {
@@ -31,11 +25,19 @@ export default class Project {
     }
   }
 
-  getTodaysTasks {
-
+  getTodaysTasks() {
+    const todaystasks = [];
+    this.tasks.forEach((task, id, map) => {
+      if (isToday(task.dueDate)) todaystasks.push(task);
+    });
+    return todaystasks;
   }
 
-  getThisWeeksTasks {
-
+  getThisWeeksTasks() {
+    const weekstasks = [];
+    this.tasks.forEach((task) => {
+      if (isThisWeek(task.dueDate)) weekstasks.push(task);
+    });
+    return weekstasks;
   }
 }
