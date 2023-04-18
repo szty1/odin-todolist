@@ -1,1 +1,1 @@
-console.log("working a-ok");
+(()=>{"use strict";class t{static#t=0;static#e(){return t.#t++,t.#t}constructor(e,s,i,n){this.title=e,this.description=s,this.dueDate=i,this.priority=n,this.id=t.#e(),this.completed=!1}}new t("test","test","09.25",1);const e=new t("test","test","09.25",1);console.log(e.id);const s=new t("test","test","09.25",1);console.log(s.id)})();
