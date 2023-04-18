@@ -31,11 +31,11 @@ export default class Project {
     }
   }
 
-  getTodayTasks {
+  getTodaysTasks {
 
   }
 
-  getThisWeekTasks {
+  getThisWeeksTasks {
 
   }
 }
