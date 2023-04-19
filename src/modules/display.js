@@ -43,13 +43,12 @@ export default class Display {
       <li><a href="#"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
       <li><a href="#"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
     </ul>
-    <h3>Projects</h3>
+    <div class="projectsheader">
+    <span>Projects</span>
+    <a href="#"><i class="fa-solid fa-plus"></i> Add</a>
+    </div>
     <ul class="projects">
     </ul>
-    <div class="addproject">
-    <a href="#"><i class="fa-solid fa-folder-plus"></i> Add Project</a>
-    </div>
-
     `;
 
     Display.updateProjects();
@@ -60,7 +59,11 @@ export default class Display {
   }
 
   static loadFooter() {
-    
+    const footer = document.querySelector('.footer');
+
+    footer.innerHTML = `
+    <span>TODOLIST by szty1 for Odin Project</span>
+    `;
   }
 
   static updateProjects() {
