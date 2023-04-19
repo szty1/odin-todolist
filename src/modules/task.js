@@ -23,6 +23,10 @@ export default class Task {
     return formatRelative(this.dueDate, new Date());
   }
 
+  setCompleted(isCompleted) {
+    this.completed = isCompleted;
+  }
+
 
 
 

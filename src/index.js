@@ -1,4 +1,4 @@
-import Display from './modules/display';
+import TodoList from './modules/todolist';
 
-document.addEventListener('DOMContentLoaded', Display.loadHomepage);
+document.addEventListener('DOMContentLoaded', TodoList.initPage());
 
