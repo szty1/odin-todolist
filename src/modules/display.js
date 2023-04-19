@@ -39,15 +39,15 @@ export default class Display {
 
     sidebar.innerHTML = `
     <ul>
-      <li><a href="#"><i class="fa-solid fa-list-check"></i> All</a></li>
-      <li><a href="#"><i class="fa-solid fa-calendar-day"></i> Today</a></li>
-      <li><a href="#"><i class="fa-solid fa-calendar-week"></i> This Week</a></li>
+      <li><a href="#"><i class="fa-solid fa-list-check"></i> All Tasks</a></li>
+      <li><a href="#"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
+      <li><a href="#"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
     </ul>
     <h3>Projects</h3>
     <ul class="projects">
     </ul>
     <div class="addproject">
-    <a href="#"><i class="fa-solid fa-plus"></i> Add Project</a>
+    <a href="#"><i class="fa-solid fa-folder-plus"></i> Add Project</a>
     </div>
 
     `;
@@ -68,7 +68,7 @@ export default class Display {
 
     const projects = TodoList.getProjects();
     projects.forEach((project) => {
-      projectsContainer.innerHTML += `<li><a href="#">${project.name}</a></li>`
+      projectsContainer.innerHTML += `<li><a href="#"><i class="fa-solid fa-folder"></i> ${project.name}</a></li>`
     })
   }
 }
