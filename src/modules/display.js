@@ -1,4 +1,4 @@
-import TodoList from './todolist';
+import Main from './main';
 import '../styles/style.css';
 
 export default class Display {
@@ -7,8 +7,9 @@ export default class Display {
     Display.loadPageSkeleton();
     Display.loadHeader();
     Display.loadSidebar();
-    Display.loadTasks();
+    Display.loadTasksAll();
     Display.loadFooter();
+    Display.addListeners();
   }
 
   static loadPageSkeleton() {
@@ -28,7 +29,7 @@ export default class Display {
     header.innerHTML = `
     <span class="logo">TODOLIST</span>
     <ul>
-      <li><a href="#"><i class="fa-solid fa-plus"></i> Add Task</a></li>
+      <li><a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a></li>
       <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Find Task</a></li>
     </ul>
     `;
@@ -39,13 +40,13 @@ export default class Display {
 
     sidebar.innerHTML = `
     <ul>
-      <li><a href="#"><i class="fa-solid fa-list-check"></i> All Tasks</a></li>
-      <li><a href="#"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
-      <li><a href="#"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
+      <li><a href="#" class="listall"><i class="fa-solid fa-list-check"></i> All Tasks</a></li>
+      <li><a href="#" class="listtoday"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
+      <li><a href="#" class="listweek"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
     </ul>
     <div class="projectsheader">
     <span>Projects</span>
-    <a href="#"><i class="fa-solid fa-plus"></i> Add</a>
+    <a href="#" class="addproject"><i class="fa-solid fa-plus"></i></a>
     </div>
     <ul class="projects">
     </ul>
@@ -54,8 +55,53 @@ export default class Display {
     Display.updateProjects();
   }
 
-  static loadTasks() {
-    
+  static loadTask(task) {
+    const tasks = document.querySelector('.tasks');
+
+    tasks.innerHTML += `
+    <div class="task">
+      <span class="title">${task.title}</span>
+      <span class="title">${task.description}</span>
+      <span class="title">${task.getFormattedDate()}</span>
+      <span class="title">Priority: ${task.priority}</span>
+    </div>
+  `
+  }
+
+  static clearTasks() {
+    const tasks = document.querySelector('.tasks');
+    tasks.innerHTML = "";
+  }
+
+  static loadTasksAll() {
+    Display.clearTasks();
+
+    const tasks = Main.todolist.getProject('All').getTasks();
+    tasks.forEach((task) => {
+      Display.loadTask(task);
+    })
+  }
+
+  static loadTasksToday() {
+    Display.clearTasks();
+
+    const tasks = Main.todolist.getProject('All').getTodaysTasks();
+    tasks.forEach((task) => {
+      Display.loadTask(task);
+    })
+  }
+
+  static loadTasksWeek() {
+    Display.clearTasks();
+
+    const tasks = Main.todolist.getProject('All').getThisWeeksTasks();
+    tasks.forEach((task) => {
+      Display.loadTask(task);
+    })
+  }
+
+  static loadTasksProject(name) {
+
   }
 
   static loadFooter() {
@@ -69,9 +115,24 @@ export default class Display {
   static updateProjects() {
     const projectsContainer = document.querySelector('.projects');
 
-    const projects = TodoList.getProjects();
+    const projects = Main.todolist.getProjects();
     projects.forEach((project) => {
-      projectsContainer.innerHTML += `<li><a href="#"><i class="fa-solid fa-folder"></i> ${project.name}</a></li>`
-    })
+      if (project.name !== 'All') {
+        projectsContainer.innerHTML += `<li><a href="#" class="listproject" data-name="${project.name}"><i class="fa-solid fa-folder-open"></i> ${project.name}</a><a href="#" class="deleteproject" data-name="${project.name}"><i class="fa-solid fa-xmark"></i></a></li>`
+      }
+    });
+  }
+
+  static addListeners() {
+    const listall = document.querySelector('.listall');
+    const listtoday = document.querySelector('.listtoday');
+    const listweek= document.querySelector('.listweek');
+    const addproject = document.querySelector('.addproject');
+
+    listall.addEventListener('click', Display.loadTasksAll);
+    listtoday.addEventListener('click', Display.loadTasksToday);
+    listweek.addEventListener('click', Display.loadTasksWeek);
+
+
   }
 }

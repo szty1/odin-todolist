@@ -1,4 +1,4 @@
-import TodoList from './modules/todolist';
+import Main from './modules/main';
 
-document.addEventListener('DOMContentLoaded', TodoList.initPage());
+document.addEventListener('DOMContentLoaded', Main.init());
 

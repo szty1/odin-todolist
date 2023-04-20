@@ -1,34 +1,31 @@
 import Task from '../modules/task';
 import Project from './project';
-import Display from './display';
 
 export default class TodoList {
 
-  static initPage() {
+  constructor() { 
     this.projects = [];
-    this.projects.push(new Project('All'));
-
-    Display.loadPage();
-
-    console.log(this.projects);
   }
 
-  static getProjects() {
+  getProjects() {
     return this.projects;
   }
 
-  static getProject(name) {
-    return this.project.find((project) => project.name === name);
+  getProject(projectname) {
+    return this.projects.find((project) => project.name === projectname);
   }
 
-  static addProject(name) {
-    if (this.projects.find((project) => project.name === name)) return;
-    this.projects.push(new Project(name));
+  addProject(projectname) {
+    if (this.projects.find((project) => project.name === projectname)) return;
+    this.projects.push(new Project(projectname));
   }
 
-  static deleteProject(name) {
-    let index = this.project.findIndex((project) => project.name === name);
+  deleteProject(projectname) {
+    let index = Tthis.projects.findIndex((project) => project.name === projectname);
     this.projects.splice(index, 1);
   }
-}
 
+  addTaskToProject(task, projectname) {
+    this.getProject(projectname).addTask(task);
+  }
+}

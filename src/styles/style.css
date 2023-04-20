@@ -103,6 +103,11 @@ li {
   width: 100%;
 }
 
+.sidebar ul li a.deleteproject {
+  color: rgb(0, 48, 104);
+  width: 20px;
+}
+
 .projectsheader {
   display: flex;
   justify-content: space-between;

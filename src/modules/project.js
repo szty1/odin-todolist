@@ -8,7 +8,7 @@ export default class Project {
   }
 
   getTasks() {
-    return Array.from(tasks.values());
+    return Array.from(this.tasks.values());
   }
 
   getTask(id) {
