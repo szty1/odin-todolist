@@ -18,7 +18,9 @@ export default class Display {
     content.innerHTML = `
     <div class="header"></div>
     <div class="sidebar"></div>
-    <div class="tasks"></div>
+    <div class="tasks">
+      <div class="tasklist"></div>
+    </div>
     <div class="footer"></div>
     `;
   }
@@ -27,7 +29,7 @@ export default class Display {
     const header = document.querySelector('.header');
 
     header.innerHTML = `
-    <span class="logo">TODOLIST</span>
+    <span class="logo"><i class="fa-regular fa-calendar-check"></i> TODOLIST</span>
     <ul>
       <li><a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a></li>
       <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Find Task</a></li>
@@ -56,20 +58,29 @@ export default class Display {
   }
 
   static loadTask(task) {
-    const tasks = document.querySelector('.tasks');
+    const tasklist = document.querySelector('.tasklist');
 
-    tasks.innerHTML += `
+    const completedIcon = task.completed ? "fa-circle-check" : "fa-circle";
+    tasklist.innerHTML += `
     <div class="task">
-      <span class="title">${task.title}</span>
-      <span class="title">${task.description}</span>
-      <span class="title">${task.getFormattedDate()}</span>
-      <span class="title">Priority: ${task.priority}</span>
+      <div class="checkbox">
+        <a href="#" class="completetask" data-id="${task.id}"><i class="fa-regular ${completedIcon}"></i></a>
+      </div>
+      <div class="data">
+        <p class="title">${task.title}</p>
+        <p class="description">${task.description}</p>
+        <p class="duedate">${task.getFormattedDate()}</p>
+      </div>
+      <div class="buttons">
+        <a href="#" class="edittaks" data-id="${task.id}"><i class="fa-regular fa-pen-to-square"></i></a>
+        <a href="#" class="deletetask" data-id="${task.id}"><i class="fa-regular fa-trash-can"></i></a>
+      </div>
     </div>
-  `
+  ` 
   }
 
   static clearTasks() {
-    const tasks = document.querySelector('.tasks');
+    const tasks = document.querySelector('.tasklist');
     tasks.innerHTML = "";
   }
 
@@ -80,6 +91,8 @@ export default class Display {
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
+
+    Display.addTaskListeners();
   }
 
   static loadTasksToday() {
@@ -89,6 +102,8 @@ export default class Display {
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
+
+    Display.addTaskListeners();
   }
 
   static loadTasksWeek() {
@@ -98,17 +113,33 @@ export default class Display {
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
+
+    Display.addTaskListeners();
   }
 
   static loadTasksProject(name) {
 
   }
 
+  static completeTask(e) {
+    Main.todolist.completeTask(this.dataset.id);
+    Display.loadTasksAll();
+  }
+
+  static editTask(e) {
+    
+  }
+
+  static deleteTask(e) {
+    Main.todolist.deleteTask(this.dataset.id);
+    Display.loadTasksAll();
+  }
+
   static loadFooter() {
     const footer = document.querySelector('.footer');
 
     footer.innerHTML = `
-    <span>TODOLIST by szty1 for Odin Project</span>
+    <span><i class="fa-regular fa-calendar-check"></i> TODOLIST by szty1 for Odin Project</span>
     `;
   }
 
@@ -132,7 +163,15 @@ export default class Display {
     listall.addEventListener('click', Display.loadTasksAll);
     listtoday.addEventListener('click', Display.loadTasksToday);
     listweek.addEventListener('click', Display.loadTasksWeek);
+  }
 
+  static addTaskListeners() {
+    const completetasks = document.querySelectorAll('.completetask');
+    const edittasks = document.querySelectorAll('.edittask');
+    const deletetasks = document.querySelectorAll('.deletetask');
 
+    completetasks.forEach((btn) => btn.addEventListener('click', Display.completeTask));
+    edittasks.forEach((btn) => btn.addEventListener('click', Display.editTask));
+    deletetasks.forEach((btn) => btn.addEventListener('click', Display.deleteTask));
   }
 }

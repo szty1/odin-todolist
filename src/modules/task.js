@@ -10,13 +10,17 @@ export default class Task {
     return Task.#nextid;
   }
 
-  constructor (title, description, dueDate, priority) {
+  constructor (title, description, dueDate) {
     this.title = title;
     this.description = description;
     this.dueDate = new Date(dueDate);
-    this.priority = priority;
     this.id = Task.#getNextId();
     this.completed = false;
+    this.priority = 1;
+  }
+
+  toggleCompleted() {
+    this.completed = !this.completed;
   }
 
   getFormattedDate() {
