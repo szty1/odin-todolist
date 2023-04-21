@@ -14,10 +14,9 @@ export default class Main {
     Display.loadPage();
   }
 
-
   static loadTestData() {
-    Main.todolist.addTaskToProject(new Task('test', 'test', '2023-04-20T08:00:00', 1), 'All');
-    Main.todolist.addTaskToProject(new Task('test2', 'test3', '2023-04-21T08:00:00', 2), 'All');
-    Main.todolist.addTaskToProject(new Task('test3', 'test3', '2023-04-28T08:00:00', 3), 'All');
+    Main.todolist.addTask(new Task('Test', 'Test', '2023-04-20T08:00:00'));
+    Main.todolist.addTask(new Task('Test2', 'test3', '2023-04-21T08:00:00'));
+    Main.todolist.addTask(new Task('Test3', 'test3', '2023-04-28T08:00:00'));
   }
 }

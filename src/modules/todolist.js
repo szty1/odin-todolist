@@ -7,6 +7,26 @@ export default class TodoList {
     this.projects = [];
   }
 
+  getTask(id) {
+    return this.getProject('All').find((task) => task.id === id)
+  }
+
+  addTask(task) {
+    this.getProject('All').addTask(task);
+  }
+
+  deleteTask(id) {
+    this.getProject('All').removeTask(id);
+  }
+
+  completeTask(id) {
+    this.getProject('All').getTask(id).toggleCompleted();
+  }
+
+  editTask(id) {
+
+  }
+
   getProjects() {
     return this.projects;
   }
@@ -25,7 +45,19 @@ export default class TodoList {
     this.projects.splice(index, 1);
   }
 
-  addTaskToProject(task, projectname) {
-    this.getProject(projectname).addTask(task);
+  getTodaysTasks() {
+    const todaystasks = [];
+    getProject('All').tasks.forEach((task, id, map) => {
+      if (isToday(task.dueDate)) todaystasks.push(task);
+    });
+    return todaystasks;
+  }
+
+  getThisWeeksTasks() {
+    const weekstasks = [];
+    getProject('All').tasks.forEach((task) => {
+      if (isThisWeek(task.dueDate)) weekstasks.push(task);
+    });
+    return weekstasks;
   }
 }
