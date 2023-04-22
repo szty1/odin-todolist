@@ -1,4 +1,4 @@
-import formatRelative from 'date-fns/formatRelative'
+import { formatRelative, toDate } from 'date-fns'
 
 export default class Task {
   // private static field stores next unique id
@@ -17,6 +17,31 @@ export default class Task {
     this.id = Task.#getNextId();
     this.completed = false;
     this.priority = 1;
+    this.project = null;
+  }
+
+  getTitle() {
+    return this.title;
+  }
+
+  setTitle(title) {
+    this.title = title;
+  }
+
+  getDescription() {
+    return this.description;
+  }
+
+  setDescription(description) {
+    this.title = title;
+  }
+
+  getDueDate() {
+    return this.dueDate;
+  }
+
+  setDueDate(dueDate) {
+    this.dueDate = toDate(dueDate);
   }
 
   toggleCompleted() {
@@ -27,8 +52,29 @@ export default class Task {
     return formatRelative(this.dueDate, new Date());
   }
 
+  getCompleted() {
+    return this.completed;
+  }
+
+  getPriority() {
+    return this.priority;
+  }
+
+  setPriority(priority) {
+    if (!Number.isInteger(priority) || priority < 0 || priority > 4) return;
+    this.priority = priority;
+  }
+
   setCompleted(isCompleted) {
     this.completed = isCompleted;
+  }
+
+  getProject() {
+    return this.project;
+  }
+
+  setProject(projectid) {
+    this.project = projectid;
   }
 
 

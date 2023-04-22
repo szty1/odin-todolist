@@ -1,63 +1,58 @@
+import { isToday, isThisWeek } from 'date-fns';
 import Task from '../modules/task';
 import Project from './project';
 
 export default class TodoList {
 
   constructor() { 
-    this.projects = [];
+    this.tasks = new Map;
+    this.projects = new Map;
   }
 
-  getTask(id) {
-    return this.getProject('All').find((task) => task.id === id)
+  addProject(project) {
+    this.projects.set(project.id, project);
+  }
+
+  getProject(id) {
+    return this.projects.get(id);
+  }
+
+  deleteProject(id) {
+    if (this.projects.has(id)) this.projects.delete(id);
+  }
+
+  getProjectsArray() {
+    return Array.from(this.projects.values());
   }
 
   addTask(task) {
-    this.getProject('All').addTask(task);
+    this.tasks.set(task.id, task);
+  }
+
+  getTask(id) {
+    return this.tasks.get(id);
   }
 
   deleteTask(id) {
-    this.getProject('All').removeTask(id);
+    if (this.tasks.has(id)) this.tasks.delete(id);
   }
 
-  completeTask(id) {
-    this.getProject('All').getTask(id).toggleCompleted();
+  getTasksArray() {
+    return Array.from(this.tasks.values());
   }
 
-  editTask(id) {
-
+  getTodayTasksArray() {
+    const tasks = Array.from(this.tasks.values());
+    return tasks.filter(task => isToday(task.getDueDate()));
   }
 
-  getProjects() {
-    return this.projects;
+  getWeekTasksArray() {
+    const tasks = Array.from(this.tasks.values());
+    return tasks.filter(task => isThisWeek(task.getDueDate()));
   }
 
-  getProject(projectname) {
-    return this.projects.find((project) => project.name === projectname);
-  }
-
-  addProject(projectname) {
-    if (this.projects.find((project) => project.name === projectname)) return;
-    this.projects.push(new Project(projectname));
-  }
-
-  deleteProject(projectname) {
-    let index = Tthis.projects.findIndex((project) => project.name === projectname);
-    this.projects.splice(index, 1);
-  }
-
-  getTodaysTasks() {
-    const todaystasks = [];
-    getProject('All').tasks.forEach((task, id, map) => {
-      if (isToday(task.dueDate)) todaystasks.push(task);
-    });
-    return todaystasks;
-  }
-
-  getThisWeeksTasks() {
-    const weekstasks = [];
-    getProject('All').tasks.forEach((task) => {
-      if (isThisWeek(task.dueDate)) weekstasks.push(task);
-    });
-    return weekstasks;
+  getTasksInProjectArray(projectid) {
+    const tasks = Array.from(this.tasks.values());
+    return tasks.filter(task => task.getProject() == projectid));
   }
 }

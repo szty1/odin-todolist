@@ -1,14 +1,12 @@
 import TodoList from './todolist';
 import Display from './display';
 import Task from './task';
-import Project from './project';
 
 export default class Main {
   static todolist
 
   static init() {
     Main.todolist = new TodoList();
-    Main.todolist.addProject('All');
     Main.loadTestData();
 
     Display.loadPage();

@@ -1,27 +1,43 @@
 import { isToday, isThisWeek } from 'date-fns'
 
 export default class Project {
-  tasks = new Map();
+  // private static field stores next unique id
+  static #nextid = -1;
+
+  // private static method returns next unique id
+  static #getNextId() {
+    Project.#nextid++
+    return Task.#nextid;
+  }
 
   constructor (name) {
     this.name = name;
+    this.id = Project.#getNextId();
   }
 
-  getTasks() {
-    return Array.from(this.tasks.values());
+  getName() {
+    return this.name;
   }
 
-  getTask(id) {
-    return this.tasks.get(id);
+  setName(name) {
+    this.name = name;
   }
 
-  addTask(task) {
-    this.tasks.set(String(task.id), task);
-  }
+  // getTasks() {
+  //   return Array.from(this.tasks.values());
+  // }
 
-  removeTask(id) {
-    if (this.tasks.has(id)) {
-      this.tasks.delete(id);
-    }
-  }
+  // getTask(id) {
+  //   return this.tasks.get(id);
+  // }
+
+  // addTask(task) {
+  //   this.tasks.set(String(task.id), task);
+  // }
+
+  // removeTask(id) {
+  //   if (this.tasks.has(id)) {
+  //     this.tasks.delete(id);
+  //   }
+  // }
 }

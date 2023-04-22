@@ -87,7 +87,7 @@ export default class Display {
   static loadTasksAll() {
     Display.clearTasks();
 
-    const tasks = Main.todolist.getProject('All').getTasks();
+    const tasks = Main.todolist.getTasksArray();
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
@@ -98,7 +98,7 @@ export default class Display {
   static loadTasksToday() {
     Display.clearTasks();
 
-    const tasks = Main.todolist.getProject('All').getTodaysTasks();
+    const tasks = Main.todolist.getTodayTasksArray();
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
@@ -109,7 +109,7 @@ export default class Display {
   static loadTasksWeek() {
     Display.clearTasks();
 
-    const tasks = Main.todolist.getProject('All').getThisWeeksTasks();
+    const tasks = Main.todolist.getWeekTasksArray();
     tasks.forEach((task) => {
       Display.loadTask(task);
     })
@@ -122,7 +122,7 @@ export default class Display {
   }
 
   static completeTask(e) {
-    Main.todolist.completeTask(this.dataset.id);
+    Main.todolist.getTask(Number(this.dataset.id)).toggleCompleted();
     Display.loadTasksAll();
   }
 
@@ -131,7 +131,7 @@ export default class Display {
   }
 
   static deleteTask(e) {
-    Main.todolist.deleteTask(this.dataset.id);
+    Main.todolist.deleteTask(Number(this.dataset.id));
     Display.loadTasksAll();
   }
 
@@ -146,7 +146,7 @@ export default class Display {
   static updateProjects() {
     const projectsContainer = document.querySelector('.projects');
 
-    const projects = Main.todolist.getProjects();
+    const projects = Main.todolist.getProjectsArray();
     projects.forEach((project) => {
       if (project.name !== 'All') {
         projectsContainer.innerHTML += `<li><a href="#" class="listproject" data-name="${project.name}"><i class="fa-solid fa-folder-open"></i> ${project.name}</a><a href="#" class="deleteproject" data-name="${project.name}"><i class="fa-solid fa-xmark"></i></a></li>`
