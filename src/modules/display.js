@@ -3,14 +3,18 @@ import '../styles/style.css';
 
 export default class Display {
 
+  static currentid= 0;
+
   static loadPage() {
     Display.loadPageSkeleton();
     Display.loadHeader();
     Display.loadSidebar();
-    Display.loadTasksAll();
+    Display.loadTasks(Display.currentid);
     Display.loadFooter();
     Display.addListeners();
   }
+
+  // content loaders
 
   static loadPageSkeleton() {
     const content = document.querySelector('.content');
@@ -42,9 +46,9 @@ export default class Display {
 
     sidebar.innerHTML = `
     <ul>
-      <li><a href="#" class="listall"><i class="fa-solid fa-list-check"></i> All Tasks</a></li>
-      <li><a href="#" class="listtoday"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
-      <li><a href="#" class="listweek"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
+      <li><a href="#" class="listall" data-id="0"><i class="fa-solid fa-list-check"></i> All Tasks</a></li>
+      <li><a href="#" class="listtoday" data-id="1"><i class="fa-solid fa-calendar-day"></i> Due Today</a></li>
+      <li><a href="#" class="listweek" data-id="2"><i class="fa-solid fa-calendar-week"></i> Due This Week</a></li>
     </ul>
     <div class="projectsheader">
     <span>Projects</span>
@@ -77,62 +81,27 @@ export default class Display {
       </div>
     </div>
   ` 
-  }
+  } 
 
-  static clearTasks() {
-    const tasks = document.querySelector('.tasklist');
-    tasks.innerHTML = "";
-  }
+  static loadTasks(id) {
+    console.log(id);
+    let tasks;
 
-  static loadTasksAll() {
+    if (id == 1) {
+      tasks = Main.todolist.getTodayTasksArray();
+    } else if (id == 2) {
+      tasks = Main.todolist.getWeekTasksArray();
+    } else if (id > 2 && Main.todolist.getProject(id)) {
+      tasks = Main.todolist.getProjectTasksArray(id);
+    } else {
+      tasks = Main.todolist.getTasksArray();
+    }
+
+    Display.currentid = id;
+
     Display.clearTasks();
-
-    const tasks = Main.todolist.getTasksArray();
-    tasks.forEach((task) => {
-      Display.loadTask(task);
-    })
-
+    tasks.forEach(task => Display.loadTask(task));
     Display.addTaskListeners();
-  }
-
-  static loadTasksToday() {
-    Display.clearTasks();
-
-    const tasks = Main.todolist.getTodayTasksArray();
-    tasks.forEach((task) => {
-      Display.loadTask(task);
-    })
-
-    Display.addTaskListeners();
-  }
-
-  static loadTasksWeek() {
-    Display.clearTasks();
-
-    const tasks = Main.todolist.getWeekTasksArray();
-    tasks.forEach((task) => {
-      Display.loadTask(task);
-    })
-
-    Display.addTaskListeners();
-  }
-
-  static loadTasksProject(name) {
-
-  }
-
-  static completeTask(e) {
-    Main.todolist.getTask(Number(this.dataset.id)).toggleCompleted();
-    Display.loadTasksAll();
-  }
-
-  static editTask(e) {
-    
-  }
-
-  static deleteTask(e) {
-    Main.todolist.deleteTask(Number(this.dataset.id));
-    Display.loadTasksAll();
   }
 
   static loadFooter() {
@@ -148,11 +117,39 @@ export default class Display {
 
     const projects = Main.todolist.getProjectsArray();
     projects.forEach((project) => {
-      if (project.name !== 'All') {
+      if (project.id > 2) {
         projectsContainer.innerHTML += `<li><a href="#" class="listproject" data-name="${project.name}"><i class="fa-solid fa-folder-open"></i> ${project.name}</a><a href="#" class="deleteproject" data-name="${project.name}"><i class="fa-solid fa-xmark"></i></a></li>`
       }
     });
   }
+
+  static clearTasks() {
+    const tasks = document.querySelector('.tasklist');
+    tasks.innerHTML = "";
+  }
+
+  // input handlers
+
+  static handleLoadTask(e) {
+    Display.loadTasks(this.dataset.id);
+  }
+
+  static completeTask(e) {
+    Main.todolist.getTask(Number(this.dataset.id)).toggleCompleted();
+    Display.loadTasks(Display.currentid);
+  }
+
+  static editTask(e) {
+    
+  }
+
+  static deleteTask(e) {
+    Main.todolist.deleteTask(Number(this.dataset.id));
+    Display.loadTasks(Display.currentid);
+  }
+
+
+  // add event listeners
 
   static addListeners() {
     const listall = document.querySelector('.listall');
@@ -160,9 +157,9 @@ export default class Display {
     const listweek= document.querySelector('.listweek');
     const addproject = document.querySelector('.addproject');
 
-    listall.addEventListener('click', Display.loadTasksAll);
-    listtoday.addEventListener('click', Display.loadTasksToday);
-    listweek.addEventListener('click', Display.loadTasksWeek);
+    listall.addEventListener('click', Display.handleLoadTask);
+    listtoday.addEventListener('click', Display.handleLoadTask);
+    listweek.addEventListener('click', Display.handleLoadTask);
   }
 
   static addTaskListeners() {

@@ -7,6 +7,10 @@ export default class TodoList {
   constructor() { 
     this.tasks = new Map;
     this.projects = new Map;
+
+    this.addProject(new Project('All Tasks'));
+    this.addProject(new Project('Due Today'));
+    this.addProject(new Project('Due This Week'));
   }
 
   addProject(project) {
@@ -53,6 +57,6 @@ export default class TodoList {
 
   getTasksInProjectArray(projectid) {
     const tasks = Array.from(this.tasks.values());
-    return tasks.filter(task => task.getProject() == projectid));
+    return tasks.filter(task => task.getProject() == projectid);
   }
 }

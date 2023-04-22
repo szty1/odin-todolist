@@ -7,7 +7,7 @@ export default class Project {
   // private static method returns next unique id
   static #getNextId() {
     Project.#nextid++
-    return Task.#nextid;
+    return Project.#nextid;
   }
 
   constructor (name) {
