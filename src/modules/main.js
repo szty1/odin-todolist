@@ -2,15 +2,29 @@ import TodoList from './todolist';
 import Display from './display';
 import Project from './project';
 import Task from './task';
+import LocalStorage from './localstorage';
 
 export default class Main {
   static todolist
 
   static init() {
     Main.todolist = new TodoList();
+
+
     Main.loadTestData();
 
     Display.loadPage();
+
+    console.log(Main.todolist.tasks);
+
+    localStorage.setItem('tasklist', JSON.stringify(Main.todolist.tasks));
+
+    let todolist2 = Object.assign(
+      new Map(),
+      JSON.parse(localStorage.getItem('tasklist'))
+      );
+
+    console.log(todolist2);
   }
 
   static loadTestData() {

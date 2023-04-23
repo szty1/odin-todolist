@@ -110,6 +110,7 @@ export default class Display {
     taskscontainer.innerHTML = `<h3>${Main.todolist.getProject(Display.currentid).getName()}</h3>`;
     tasks.forEach(task => Display.loadTask(task));
     Display.addTaskListeners();
+    taskscontainer.innerHTML += `<a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a>`
   }
 
   static loadFooter() {
