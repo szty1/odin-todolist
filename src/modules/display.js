@@ -65,6 +65,7 @@ export default class Display {
     const tasklist = document.querySelector('.tasklist');
 
     const completedIcon = task.completed ? "fa-circle-check" : "fa-circle";
+    const inProject = Main.todolist.getTaskProjectName(task.id);
     tasklist.innerHTML += `
     <div class="task">
       <div class="checkbox">
@@ -73,7 +74,10 @@ export default class Display {
       <div class="data">
         <p class="title">${task.title}</p>
         <p class="description">${task.description}</p>
-        <p class="duedate">${task.getFormattedDate()}</p>
+        <div class="taskdata">
+          <span class="duedate"><i class="fa-regular fa-calendar"></i> ${task.getFormattedDate()}</span>
+          <span class="priority"><i class="fa-solid fa-circle-exclamation"></i> Priority: ${task.getPriority()}</span>
+        </div>
       </div>
       <div class="buttons">
         <a href="#" class="edittaks" data-id="${task.id}"><i class="fa-regular fa-pen-to-square"></i></a>
@@ -81,18 +85,21 @@ export default class Display {
       </div>
     </div>
   ` 
+
+  const taskdata = document.querySelector('.taskdata');
+  if (inProject) taskdata.innerHTML += `<span class="project"><i class="fa-solid fa-folder-open"></i> ${inProject}</span>`
   } 
 
   static loadTasks(id) {
-    console.log(id);
+    const taskscontainer = document.querySelector('.tasklist');
     let tasks;
 
     if (id == 1) {
       tasks = Main.todolist.getTodayTasksArray();
     } else if (id == 2) {
       tasks = Main.todolist.getWeekTasksArray();
-    } else if (id > 2 && Main.todolist.getProject(id)) {
-      tasks = Main.todolist.getProjectTasksArray(id);
+    } else if (id > 2 && Main.todolist.hasProject(id)) {
+      tasks = Main.todolist.getTasksInProjectArray(id);
     } else {
       tasks = Main.todolist.getTasksArray();
     }
@@ -100,6 +107,7 @@ export default class Display {
     Display.currentid = id;
 
     Display.clearTasks();
+    taskscontainer.innerHTML = `<h3>${Main.todolist.getProject(Display.currentid).getName()}</h3>`;
     tasks.forEach(task => Display.loadTask(task));
     Display.addTaskListeners();
   }
@@ -116,11 +124,20 @@ export default class Display {
     const projectsContainer = document.querySelector('.projects');
 
     const projects = Main.todolist.getProjectsArray();
+
+    Display.clearProjects();
+
     projects.forEach((project) => {
       if (project.id > 2) {
-        projectsContainer.innerHTML += `<li><a href="#" class="listproject" data-name="${project.name}"><i class="fa-solid fa-folder-open"></i> ${project.name}</a><a href="#" class="deleteproject" data-name="${project.name}"><i class="fa-solid fa-xmark"></i></a></li>`
+        projectsContainer.innerHTML += `
+        <li>
+        <a href="#" class="listproject" data-id="${project.id}"><i class="fa-solid fa-folder-open"></i> ${project.name}</a>
+        <a href="#" class="deleteproject" data-id="${project.id}"><i class="fa-solid fa-xmark"></i></a>
+        </li>`
       }
     });
+
+    Display.addProjectListeners() 
   }
 
   static clearTasks() {
@@ -128,10 +145,15 @@ export default class Display {
     tasks.innerHTML = "";
   }
 
+  static clearProjects() {
+    const projects = document.querySelector('.projects');
+    projects.innerHTML = "";
+  }
+
   // input handlers
 
   static handleLoadTask(e) {
-    Display.loadTasks(this.dataset.id);
+    Display.loadTasks(Number(this.dataset.id));
   }
 
   static completeTask(e) {
@@ -148,6 +170,11 @@ export default class Display {
     Display.loadTasks(Display.currentid);
   }
 
+  static deleteProject(e) {
+    Main.todolist.deleteProject(Number(this.dataset.id));
+    Display.updateProjects();
+  }
+
 
   // add event listeners
 
@@ -160,6 +187,14 @@ export default class Display {
     listall.addEventListener('click', Display.handleLoadTask);
     listtoday.addEventListener('click', Display.handleLoadTask);
     listweek.addEventListener('click', Display.handleLoadTask);
+  }
+
+  static addProjectListeners() {
+    const listproject = document.querySelectorAll('.listproject');
+    const deleteproject = document.querySelectorAll('.deleteproject');
+
+    listproject.forEach((btn) => btn.addEventListener('click', Display.handleLoadTask));
+    deleteproject.forEach((btn) => btn.addEventListener('click', Display.deleteProject));
   }
 
   static addTaskListeners() {

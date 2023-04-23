@@ -21,6 +21,10 @@ export default class TodoList {
     return this.projects.get(id);
   }
 
+  hasProject(id) {
+    return this.projects.has(id);
+  }
+
   deleteProject(id) {
     if (this.projects.has(id)) this.projects.delete(id);
   }
@@ -35,6 +39,10 @@ export default class TodoList {
 
   getTask(id) {
     return this.tasks.get(id);
+  }
+
+  hasTask(id) {
+    return this.tasks.has(id);
   }
 
   deleteTask(id) {
@@ -58,5 +66,11 @@ export default class TodoList {
   getTasksInProjectArray(projectid) {
     const tasks = Array.from(this.tasks.values());
     return tasks.filter(task => task.getProject() == projectid);
+  }
+
+  getTaskProjectName(id) {
+    const projectid = this.getTask(id).getProject();
+    return (this.hasProject(projectid)) ? this.getProject(projectid).getName() : false;
+    
   }
 }
