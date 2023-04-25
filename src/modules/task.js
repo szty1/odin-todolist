@@ -1,4 +1,4 @@
-import { formatRelative, toDate } from 'date-fns'
+import { formatRelative, toDate, parseISO } from 'date-fns'
 
 export default class Task {
   // private static field stores next unique id
@@ -10,13 +10,13 @@ export default class Task {
     return Task.#nextid;
   }
 
-  constructor (title, description, dueDate) {
+  constructor (title, description, dueDate, important) {
     this.title = title;
     this.description = description;
     this.dueDate = new Date(dueDate);
-    this.id = Task.#getNextId();
+    this.id = String(Task.#getNextId());
     this.completed = false;
-    this.priority = 1;
+    this.important = important;
     this.project = null;
   }
 
@@ -44,10 +44,6 @@ export default class Task {
     this.dueDate = toDate(dueDate);
   }
 
-  toggleCompleted() {
-    this.completed = !this.completed;
-  }
-
   getFormattedDate() {
     return formatRelative(this.dueDate, new Date());
   }
@@ -56,13 +52,12 @@ export default class Task {
     return this.completed;
   }
 
-  getPriority() {
-    return this.priority;
+  getImportant() {
+    return this.important;
   }
 
-  setPriority(priority) {
-    if (!Number.isInteger(priority) || priority < 0 || priority > 4) return;
-    this.priority = priority;
+  setImportant(important) {
+    this.important = important;
   }
 
   setCompleted(isCompleted) {
@@ -75,6 +70,12 @@ export default class Task {
 
   setProject(projectid) {
     this.project = projectid;
+  }
+
+  fixDate() {
+    if (!(this.dueDate instanceof Date)) {
+      this.dueDate = parseISO(this.dueDate);
+    }
   }
 
 

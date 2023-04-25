@@ -1,76 +1,99 @@
 import { isToday, isThisWeek } from 'date-fns';
 import Task from '../modules/task';
 import Project from './project';
+import LocalStorage from './localstorage';
 
 export default class TodoList {
 
   constructor() { 
-    this.tasks = new Map;
-    this.projects = new Map;
+    this.tasks = [];
+    this.projects = [];
 
-    this.addProject(new Project('All Tasks'));
-    this.addProject(new Project('Due Today'));
-    this.addProject(new Project('Due This Week'));
+    this.projects.push(new Project('All Tasks'));
+    this.projects.push(new Project('Due Today'));
+    this.projects.push(new Project('Due This Week'));
+  }
+
+  setProjects(projects) {
+    this.projects = projects;
+  }
+
+  getProjects() {
+    return this.projects;
+  }
+
+  setTasks(tasks) {
+    this.tasks = tasks;
+  }
+
+  getTasks() {
+    return this.tasks;
   }
 
   addProject(project) {
-    this.projects.set(project.id, project);
+    this.projects.push(project);
+    LocalStorage.saveTodoList(this);
   }
 
   getProject(id) {
-    return this.projects.get(id);
+    return this.projects.find(project => project.id == id);
   }
 
   hasProject(id) {
-    return this.projects.has(id);
+    return (this.projects.findIndex(project => project.id == id) >= 0);
   }
 
   deleteProject(id) {
-    if (this.projects.has(id)) this.projects.delete(id);
-  }
-
-  getProjectsArray() {
-    return Array.from(this.projects.values());
+    if (this.hasProject(id)) {
+      this.projects.splice(this.projects.findIndex(project => project.id == id), 1);
+      LocalStorage.saveTodoList(this);
+    }
   }
 
   addTask(task) {
-    this.tasks.set(task.id, task);
+    this.tasks.push(task);
+    LocalStorage.saveTodoList(this);
   }
 
   getTask(id) {
-    return this.tasks.get(id);
+    return this.tasks.find(task => task.id == id);
   }
 
   hasTask(id) {
-    return this.tasks.has(id);
+    return (this.tasks.findIndex(task => task.id == id) >= 0);
   }
 
   deleteTask(id) {
-    if (this.tasks.has(id)) this.tasks.delete(id);
+    if (this.hasTask(id)) {
+      this.tasks.splice(this.tasks.findIndex(task => task.id == id), 1);
+      LocalStorage.saveTodoList(this);
+    }
   }
 
-  getTasksArray() {
-    return Array.from(this.tasks.values());
+  getTodayTasks() {
+    return this.tasks.filter(task => isToday(task.getDueDate()));
   }
 
-  getTodayTasksArray() {
-    const tasks = Array.from(this.tasks.values());
-    return tasks.filter(task => isToday(task.getDueDate()));
+  getWeekTasks() {
+    return this.tasks.filter(task => isThisWeek(task.getDueDate()));
   }
 
-  getWeekTasksArray() {
-    const tasks = Array.from(this.tasks.values());
-    return tasks.filter(task => isThisWeek(task.getDueDate()));
-  }
-
-  getTasksInProjectArray(projectid) {
-    const tasks = Array.from(this.tasks.values());
-    return tasks.filter(task => task.getProject() == projectid);
+  getTasksInProject(projectid) {
+    return this.tasks.filter(task => task.getProject() == projectid);
   }
 
   getTaskProjectName(id) {
     const projectid = this.getTask(id).getProject();
     return (this.hasProject(projectid)) ? this.getProject(projectid).getName() : false;
-    
+  }
+
+  toggleImportant(id) {
+    this.getTask(id).setImportant(!this.getTask(id).getImportant());
+    LocalStorage.saveTodoList(this);
+  }
+
+  toggleCompleted(id) {
+    this.getTask(id).setCompleted(!this.getTask(id).getCompleted());
+    LocalStorage.saveTodoList(this);
   }
 }

@@ -3,7 +3,7 @@ import '../styles/style.css';
 
 export default class Display {
 
-  static currentid= 0;
+  static currentid= '0';
 
   static loadPage() {
     Display.loadPageSkeleton();
@@ -64,8 +64,15 @@ export default class Display {
   static loadTask(task) {
     const tasklist = document.querySelector('.tasklist');
 
-    const completedIcon = task.completed ? "fa-circle-check" : "fa-circle";
-    const inProject = Main.todolist.getTaskProjectName(task.id);
+    const importantIcon = task.getImportant() ? "fa-solid fa-star" : "fa-regular fa-star";
+    const completedIcon = task.getCompleted() ? "fa-circle-check" : "fa-circle";
+    const important = task.getImportant() ? `<span class="priority"><i class="fa-solid fa-star"></i> Important</span>` : "";
+    let inProject = "";
+    if (Main.todolist.getTaskProjectName(task.id)) {
+      inProject = `
+      <span class="project"><i class="fa-solid fa-folder-open"></i> ${Main.todolist.getTaskProjectName(task.id)}</span>
+      `;
+    }
     tasklist.innerHTML += `
     <div class="task">
       <div class="checkbox">
@@ -76,41 +83,43 @@ export default class Display {
         <p class="description">${task.description}</p>
         <div class="taskdata">
           <span class="duedate"><i class="fa-regular fa-calendar"></i> ${task.getFormattedDate()}</span>
-          <span class="priority"><i class="fa-solid fa-circle-exclamation"></i> Priority: ${task.getPriority()}</span>
+          ${inProject}
+          ${important}
         </div>
       </div>
       <div class="buttons">
-        <a href="#" class="edittaks" data-id="${task.id}"><i class="fa-regular fa-pen-to-square"></i></a>
+        <a href="#" class="toggleimportant" data-id="${task.id}"><i class="${importantIcon}"></i></a>
+        <a href="#" class="edittask" data-id="${task.id}"><i class="fa-regular fa-pen-to-square"></i></a>
         <a href="#" class="deletetask" data-id="${task.id}"><i class="fa-regular fa-trash-can"></i></a>
       </div>
     </div>
   ` 
-
-  const taskdata = document.querySelector('.taskdata');
-  if (inProject) taskdata.innerHTML += `<span class="project"><i class="fa-solid fa-folder-open"></i> ${inProject}</span>`
   } 
 
   static loadTasks(id) {
     const taskscontainer = document.querySelector('.tasklist');
     let tasks;
 
-    if (id == 1) {
-      tasks = Main.todolist.getTodayTasksArray();
-    } else if (id == 2) {
-      tasks = Main.todolist.getWeekTasksArray();
+    if (id == '1') {
+      tasks = Main.todolist.getTodayTasks();
+    } else if (id == '2') {
+      tasks = Main.todolist.getWeekTasks();
     } else if (id > 2 && Main.todolist.hasProject(id)) {
-      tasks = Main.todolist.getTasksInProjectArray(id);
+      tasks = Main.todolist.getTasksInProject(id);
     } else {
-      tasks = Main.todolist.getTasksArray();
+      tasks = Main.todolist.getTasks();
     }
 
     Display.currentid = id;
 
     Display.clearTasks();
     taskscontainer.innerHTML = `<h3>${Main.todolist.getProject(Display.currentid).getName()}</h3>`;
+  
     tasks.forEach(task => Display.loadTask(task));
+  
+    taskscontainer.innerHTML += `<a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a>`;
+
     Display.addTaskListeners();
-    taskscontainer.innerHTML += `<a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a>`
   }
 
   static loadFooter() {
@@ -124,7 +133,7 @@ export default class Display {
   static updateProjects() {
     const projectsContainer = document.querySelector('.projects');
 
-    const projects = Main.todolist.getProjectsArray();
+    const projects = Main.todolist.getProjects();
 
     Display.clearProjects();
 
@@ -154,11 +163,16 @@ export default class Display {
   // input handlers
 
   static handleLoadTask(e) {
-    Display.loadTasks(Number(this.dataset.id));
+    Display.loadTasks(this.dataset.id);
   }
 
-  static completeTask(e) {
-    Main.todolist.getTask(Number(this.dataset.id)).toggleCompleted();
+  static toggleCompleted(e) {
+    Main.todolist.toggleCompleted(this.dataset.id);
+    Display.loadTasks(Display.currentid);
+  }
+
+  static toggleImportant(e) {
+    Main.todolist.toggleImportant(this.dataset.id);
     Display.loadTasks(Display.currentid);
   }
 
@@ -167,15 +181,14 @@ export default class Display {
   }
 
   static deleteTask(e) {
-    Main.todolist.deleteTask(Number(this.dataset.id));
+    Main.todolist.deleteTask(this.dataset.id);
     Display.loadTasks(Display.currentid);
   }
 
   static deleteProject(e) {
-    Main.todolist.deleteProject(Number(this.dataset.id));
+    Main.todolist.deleteProject(this.dataset.id);
     Display.updateProjects();
   }
-
 
   // add event listeners
 
@@ -200,10 +213,12 @@ export default class Display {
 
   static addTaskListeners() {
     const completetasks = document.querySelectorAll('.completetask');
+    const importantbtns = document.querySelectorAll('.toggleimportant');
     const edittasks = document.querySelectorAll('.edittask');
     const deletetasks = document.querySelectorAll('.deletetask');
 
-    completetasks.forEach((btn) => btn.addEventListener('click', Display.completeTask));
+    completetasks.forEach((btn) => btn.addEventListener('click', Display.toggleCompleted));
+    importantbtns.forEach((btn) => btn.addEventListener('click', Display.toggleImportant));
     edittasks.forEach((btn) => btn.addEventListener('click', Display.editTask));
     deletetasks.forEach((btn) => btn.addEventListener('click', Display.deleteTask));
   }
