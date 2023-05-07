@@ -57,7 +57,7 @@ export default class Display {
     <div class="addprojectform">
       <form id="addproject" ethod="get" action="#">
         <input type="text" name="projectname" placeholder="Project Name">
-        <button class="confirm">Confirm</button>
+        <button class="confirm">Add Project</button>
         <button class="cancel">Cancel</button>
       </form>
     </div>
@@ -80,14 +80,16 @@ export default class Display {
       <span class="project"><i class="fa-solid fa-folder-open"></i> ${Main.todolist.getTaskProjectName(task.id)}</span>
       `;
     }
+    const completedClass = task.getCompleted() ? " completed" : "";
+    const importantClass = task.getImportant() ? " important" : "";
     tasklist.innerHTML += `
-    <div class="task">
+    <div class="task${importantClass}">
       <div class="checkbox">
         <a href="#" class="completetask" data-id="${task.id}"><i class="fa-regular ${completedIcon}"></i></a>
       </div>
       <div class="data">
-        <p class="title">${task.title}</p>
-        <p class="description">${task.description}</p>
+        <p class="title${completedClass}">${task.title}</p>
+        <p class="description${completedClass}">${task.description}</p>
         <div class="taskdata">
           <span class="duedate"><i class="fa-regular fa-calendar"></i> ${task.getFormattedDate()}</span>
           ${inProject}
