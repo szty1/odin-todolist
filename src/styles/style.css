@@ -108,6 +108,34 @@ li {
   width: 20px;
 }
 
+.addprojectform {
+  display: none;
+  padding: 0 20px 30px 5px;
+}
+
+.visible {
+  display: block;
+}
+
+.addprojectform input {
+  padding: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  border: 1px solid rgb(0, 48, 104);
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.addprojectform button {
+  padding: 5px 20px;
+  font-weight: bold;
+  font-size: 16px;
+  background-color: rgb(0, 48, 104);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+}
+
 .projectsheader {
   display: flex;
   justify-content: space-between;

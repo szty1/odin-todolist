@@ -35,6 +35,10 @@ export default class TodoList {
     LocalStorage.saveTodoList(this);
   }
 
+  createNewProject(projectname) {
+    this.addProject(new Project(projectname));
+  }
+
   getProject(id) {
     return this.projects.find(project => project.id == id);
   }

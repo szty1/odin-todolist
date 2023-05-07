@@ -54,6 +54,13 @@ export default class Display {
     <span>Projects</span>
     <a href="#" class="addproject"><i class="fa-solid fa-plus"></i></a>
     </div>
+    <div class="addprojectform">
+      <form id="addproject" ethod="get" action="#">
+        <input type="text" name="projectname" placeholder="Project Name">
+        <button class="confirm">Confirm</button>
+        <button class="cancel">Cancel</button>
+      </form>
+    </div>
     <ul class="projects">
     </ul>
     `;
@@ -190,6 +197,27 @@ export default class Display {
     Display.updateProjects();
   }
 
+  static showAddProjectForm(e) {
+    const addprojectform = document.querySelector('.addprojectform');
+    addprojectform.classList.add('visible');
+  }
+
+  static hideAddProjectForm(e) {
+    const form = document.getElementById("addproject");
+    form.reset();
+    const addprojectform = document.querySelector('.addprojectform');
+    addprojectform.classList.remove('visible');
+  }
+
+  static handleAddProjectForm(e) {
+    const form = document.getElementById("addproject");
+    if (form.projectname.value != null) {
+      Main.todolist.createNewProject(form.projectname.value);
+      Display.hideAddProjectForm();
+      Display.updateProjects();
+    } 
+  }
+
   // add event listeners
 
   static addListeners() {
@@ -197,10 +225,15 @@ export default class Display {
     const listtoday = document.querySelector('.listtoday');
     const listweek= document.querySelector('.listweek');
     const addproject = document.querySelector('.addproject');
+    const confirmaddproject = document.querySelector('.addprojectform .confirm');
+    const canceladdproject = document.querySelector('.addprojectform .cancel');
 
     listall.addEventListener('click', Display.handleLoadTask);
     listtoday.addEventListener('click', Display.handleLoadTask);
     listweek.addEventListener('click', Display.handleLoadTask);
+    addproject.addEventListener('click', Display.showAddProjectForm);
+    confirmaddproject.addEventListener('click', Display.handleAddProjectForm);
+    canceladdproject.addEventListener('click', Display.hideAddProjectForm);
   }
 
   static addProjectListeners() {

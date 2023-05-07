@@ -10,15 +10,15 @@ export default class Main {
   static init() {
     Main.todolist = new TodoList();
 
-    // if (LocalStorage.hasTodoList()) {
-    //   Main.todolist = LocalStorage.loadTodoList();
-    // } else {
-    //   Main.loadTestProjects();
-    //   Main.loadTestTasks();
-    // }
+    if (LocalStorage.hasTodoList()) {
+      Main.todolist = LocalStorage.loadTodoList();
+    } else {
+      Main.loadTestProjects();
+      Main.loadTestTasks();
+    }
 
-    Main.loadTestProjects();
-    Main.loadTestTasks();
+    // Main.loadTestProjects();
+    // Main.loadTestTasks();
 
     Display.loadPage();
 
