@@ -56,7 +56,7 @@ export default class Display {
     <a href="#" class="addproject"><i class="fa-solid fa-plus"></i></a>
     </div>
     <div class="addprojectform">
-      <form id="addproject" ethod="get" action="#">
+      <form id="addproject" method="get" action="#">
         <input type="text" name="projectname" placeholder="Project Name">
         <button class="confirm">Add Project</button>
         <button class="cancel">Cancel</button>
@@ -201,12 +201,13 @@ export default class Display {
               <option value="important">Important</option>
             </select>
           </div>
-          <button type="submit">Add Task</button>
+          <button type="submit" class="confirm">Save Task</button>
           <button class="cancel">Cancel</button>
         </form>
       </div>
     `;
 
+    Display.addModalListeners();
     modal.classList.add('visible');
   }
 
@@ -261,6 +262,17 @@ export default class Display {
     } 
   }
 
+  static handleEditTaskForm(e) {
+    
+  }
+
+  static hideEditTaskModal(e) {
+    e.preventDefault();
+    const modal = document.querySelector('.modal');
+    modal.classList.remove('visible');
+  }
+
+
   // add event listeners
 
   static addListeners() {
@@ -297,5 +309,13 @@ export default class Display {
     importantbtns.forEach((btn) => btn.addEventListener('click', Display.toggleImportant));
     edittasks.forEach((btn) => btn.addEventListener('click', Display.editTask));
     deletetasks.forEach((btn) => btn.addEventListener('click', Display.deleteTask));
+  }
+
+  static addModalListeners() {
+    const confirmtask = document.querySelector('.add .confirm');
+    const canceltask = document.querySelector('.add .cancel');
+
+    confirmtask.addEventListener('click', Display.handleEditTaskForm);
+    canceltask.addEventListener('click', Display.hideEditTaskModal);
   }
 }
