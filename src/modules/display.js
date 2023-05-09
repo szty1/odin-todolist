@@ -26,6 +26,7 @@ export default class Display {
       <div class="tasklist"></div>
     </div>
     <div class="footer"></div>
+    <div class="modal"></div>
     `;
   }
 
@@ -169,6 +170,46 @@ export default class Display {
     projects.innerHTML = "";
   }
 
+  static loadEditTaskModal(task) {
+    const modal = document.querySelector('.modal');
+
+    modal.innerHTML = `
+      <div class="add">
+        <form action="#" method="get" novalidate>
+          <div>
+            <label for="author">Title</label>
+            <input type="text" name="title" id="title" value="${task.getTitle()}" required>
+          </div>
+          <div>
+            <label for="title">Description</label>
+            <input type="text" name="description" id="description" value="${task.getDescription()}"required>
+          </div>
+          <div>
+            <label for="title">Due Date</label>
+            <input type="date" name="duedate" id="duedate" value="${task.getDueDateYYYYMMDD()}"required>
+          </div>
+          <div>
+            <label for="read">Project</label>
+            <select name="project" id="project">
+
+            </select>
+          </div>
+          <div>
+            <label for="read">Priority</label>
+            <select name="priority" id="priority">
+              <option value="normal">Normal</option>
+              <option value="important">Important</option>
+            </select>
+          </div>
+          <button type="submit">Add Task</button>
+          <button class="cancel">Cancel</button>
+        </form>
+      </div>
+    `;
+
+    modal.classList.add('visible');
+  }
+
   // input handlers
 
   static handleLoadTask(e) {
@@ -186,7 +227,7 @@ export default class Display {
   }
 
   static editTask(e) {
-    
+    Display.loadEditTaskModal(Main.todolist.getTask(this.dataset.id));
   }
 
   static deleteTask(e) {

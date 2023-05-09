@@ -1,4 +1,4 @@
-import { formatRelative, toDate, parseISO } from 'date-fns'
+import { format, formatRelative, toDate, parseISO } from 'date-fns'
 
 export default class Task {
   // private static field stores next unique id
@@ -38,6 +38,10 @@ export default class Task {
 
   getDueDate() {
     return this.dueDate;
+  }
+
+  getDueDateYYYYMMDD() {
+    return format(this.dueDate, "yyyy-MM-dd");
   }
 
   setDueDate(dueDate) {
