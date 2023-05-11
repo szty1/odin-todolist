@@ -263,7 +263,7 @@ export default class Display {
   }
 
   static handleEditTaskForm(e) {
-    
+    console.log('test');
   }
 
   static hideEditTaskModal(e) {
