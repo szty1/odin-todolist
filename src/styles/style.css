@@ -267,7 +267,6 @@ div.add {
 
 div.add form {
   align-items: top;
-  margin-top: 20px;
 }
 
 div.add label {
@@ -288,8 +287,13 @@ div.add select {
   width: 615px;
 }
 
+div.add h3 {
+  margin-top: 0;
+}
+
 div.add button {
   padding: 5px 20px;
+  margin-top: 20px;
   font-weight: bold;
   font-size: 16px;
   background-color: rgb(0, 48, 104);
