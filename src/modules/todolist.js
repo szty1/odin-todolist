@@ -22,6 +22,10 @@ export default class TodoList {
     return this.projects;
   }
 
+  getCustomProjects() {
+    return this.projects.slice(3);
+  }
+
   setTasks(tasks) {
     this.tasks = tasks;
   }
@@ -72,6 +76,20 @@ export default class TodoList {
       this.tasks.splice(this.tasks.findIndex(task => task.id == id), 1);
       LocalStorage.saveTodoList(this);
     }
+  }
+
+  updateTask(form) {
+    const task = this.getTask(Number(form.taskid.value));
+    task.setTitle(form.title.value);
+    task.setDescription(form.description.value);
+    task.setDueDate(form.duedate.value);
+    if (this.hasProject(Number(form.project.value))) {
+      task.setProject(Number(form.project.value));
+    }
+    else {
+      task.setProject(null);
+    }
+    LocalStorage.saveTodoList(this);
   }
 
   getTodayTasks() {

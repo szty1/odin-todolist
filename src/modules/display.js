@@ -175,40 +175,43 @@ export default class Display {
 
     modal.innerHTML = `
       <div class="add">
-        <form action="#" method="get" novalidate>
+        <form id="edittask" action="#" method="get" novalidate>
+          <h3>Edit Task</h3>
+          <input type="hidden" name="taskid" id="taskid" value="${task.id}">
           <div>
-            <label for="author">Title</label>
+            <label for="title">Title</label>
             <input type="text" name="title" id="title" value="${task.getTitle()}" required>
           </div>
           <div>
-            <label for="title">Description</label>
+            <label for="description">Description</label>
             <input type="text" name="description" id="description" value="${task.getDescription()}"required>
           </div>
           <div>
-            <label for="title">Due Date</label>
+            <label for="duedate">Due Date</label>
             <input type="date" name="duedate" id="duedate" value="${task.getDueDateYYYYMMDD()}"required>
           </div>
           <div>
-            <label for="read">Project</label>
+            <label for="project">Project</label>
             <select name="project" id="project">
-
+              ${Display.listProjects(task.getProject())}
             </select>
           </div>
-          <div>
-            <label for="read">Priority</label>
-            <select name="priority" id="priority">
-              <option value="normal">Normal</option>
-              <option value="important">Important</option>
-            </select>
-          </div>
-          <button type="submit" class="confirm">Save Task</button>
-          <button class="cancel">Cancel</button>
+          <button type="button" class="confirm">Update Task</button>
+          <button type="button" class="cancel">Cancel</button>
         </form>
       </div>
     `;
 
     Display.addModalListeners();
     modal.classList.add('visible');
+  }
+
+  static listProjects(selectedId) {
+    let options = `<option value="-1">None</option>`;
+    Main.todolist.getCustomProjects().forEach((project) => {
+      options += `<option value="${project.id}" ${(project.id == selectedId) ? 'selected' : ''}>${project.getName()}</option>`;
+    });
+    return options;
   }
 
   // input handlers
@@ -239,6 +242,7 @@ export default class Display {
   static deleteProject(e) {
     Main.todolist.deleteProject(this.dataset.id);
     Display.updateProjects();
+    Display.loadTasks(Display.currentid);
   }
 
   static showAddProjectForm(e) {
@@ -263,11 +267,13 @@ export default class Display {
   }
 
   static handleEditTaskForm(e) {
-    console.log('test');
+    const form = document.getElementById("edittask");
+    Main.todolist.updateTask(form);
+    Display.hideEditTaskModal();
+    Display.loadTasks(Display.currentid);
   }
 
   static hideEditTaskModal(e) {
-    e.preventDefault();
     const modal = document.querySelector('.modal');
     modal.classList.remove('visible');
   }

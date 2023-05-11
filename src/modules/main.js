@@ -17,6 +17,9 @@ export default class Main {
       Main.loadTestTasks();
     }
 
+    // Main.loadTestProjects();
+    //   Main.loadTestTasks();
+
     Display.loadPage();
   }
 
