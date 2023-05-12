@@ -36,9 +36,7 @@ export default class Display {
     header.innerHTML = `
     <span class="logo"><i class="fa-regular fa-calendar-check"></i> TODOLIST</span>
     <ul>
-      <li><a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a></li>
-      <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Find Task</a></li>
-    </ul>
+      <li><a href="#" class="addtask"><i class="fa-solid fa-plus"></i> Add Task</a></li>    </ul>
     `;
   }
 
