@@ -11,9 +11,9 @@ export default class Task {
   }
 
   constructor (title, description, dueDate, important) {
-    this.title = (title != "") ? title : "New Task";
+    this.title = title;
     this.description = description;
-    this.dueDate = (isValid(dueDate)) ? new Date(dueDate) : new Date();
+    this.dueDate = (isValid(parseISO(dueDate))) ? new Date(dueDate) : new Date();
     this.id = String(Task.#getNextId());
     this.completed = false;
     this.important = important;
@@ -45,7 +45,7 @@ export default class Task {
   }
 
   setDueDate(dueDate) {
-    if (isValid(dueDate)) {
+    if (isValid(parseISO(dueDate))) {
       this.dueDate = parseISO(dueDate);
     } else {
       this.dueDate = new Date();

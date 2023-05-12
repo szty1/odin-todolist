@@ -61,6 +61,7 @@ export default class TodoList {
   addTask(task) {
     this.tasks.push(task);
     LocalStorage.saveTodoList(this);
+    return task;
   }
 
   getTask(id) {
@@ -79,7 +80,8 @@ export default class TodoList {
   }
 
   addNewTask(form) {
-    this.addTask(new Task(form.title.value, form.description.value, form.duedate.value, false));
+    const task = this.addTask(new Task(form.title.value, form.description.value, form.duedate.value, false));
+    task.setProject(form.project.value);
     LocalStorage.saveTodoList(this);
   }
 

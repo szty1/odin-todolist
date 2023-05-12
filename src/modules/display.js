@@ -89,7 +89,7 @@ export default class Display {
         <a href="#" class="completetask" data-id="${task.id}"><i class="fa-regular ${completedIcon}"></i></a>
       </div>
       <div class="data">
-        <p class="title${completedClass}">${task.title}</p>
+        <p class="title${completedClass}">${(task.title != '') ? task.title : '<i>Unnamed Task</i>'}</p>
         <p class="description${completedClass}">${task.description}</p>
         <div class="taskdata">
           <span class="duedate"><i class="fa-regular fa-calendar"></i> ${task.getFormattedDate()}</span>
@@ -192,7 +192,7 @@ export default class Display {
           <div>
             <label for="project">Project</label>
             <select name="project" id="project">
-              ${Display.listProjects(project.id)}
+              ${Display.listProjects(Display.currentid)}
             </select>
           </div>
           <button type="button" class="confirm">Add Task</button>
@@ -354,11 +354,13 @@ export default class Display {
   }
 
   static addTaskListeners() {
+    const addtask = document.querySelector('.tasklist .addtask');
     const completetasks = document.querySelectorAll('.completetask');
     const importantbtns = document.querySelectorAll('.toggleimportant');
     const edittasks = document.querySelectorAll('.edittask');
     const deletetasks = document.querySelectorAll('.deletetask');
 
+    addtask.addEventListener('click', Display.addTask);
     completetasks.forEach((btn) => btn.addEventListener('click', Display.toggleCompleted));
     importantbtns.forEach((btn) => btn.addEventListener('click', Display.toggleImportant));
     edittasks.forEach((btn) => btn.addEventListener('click', Display.editTask));
@@ -376,7 +378,7 @@ export default class Display {
   static addEditModalListeners() {
     const confirmtask = document.querySelector('.add .confirm');
     const canceltask = document.querySelector('.add .cancel');
-    
+
 
     confirmtask.addEventListener('click', Display.handleEditTaskForm);
     canceltask.addEventListener('click', Display.hideModal);
