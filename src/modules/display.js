@@ -170,12 +170,47 @@ export default class Display {
     projects.innerHTML = "";
   }
 
+  static loadAddTaskModal(project) {
+    const modal = document.querySelector('.modal');
+
+    modal.innerHTML = `
+      <div class="add">
+        <form id="addtask" action="#" method="get">
+          <h3>Add Task</h3>
+          <div>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" required>
+          </div>
+          <div>
+            <label for="description">Description</label>
+            <input type="text" name="description" id="description" required>
+          </div>
+          <div>
+            <label for="duedate">Due Date</label>
+            <input type="date" name="duedate" id="duedate" required>
+          </div>
+          <div>
+            <label for="project">Project</label>
+            <select name="project" id="project">
+              ${Display.listProjects(project.id)}
+            </select>
+          </div>
+          <button type="button" class="confirm">Add Task</button>
+          <button type="button" class="cancel">Cancel</button>
+        </form>
+      </div>
+    `;
+
+    Display.addAddModalListeners();
+    modal.classList.add('visible');
+  }
+
   static loadEditTaskModal(task) {
     const modal = document.querySelector('.modal');
 
     modal.innerHTML = `
       <div class="add">
-        <form id="edittask" action="#" method="get" novalidate>
+        <form id="edittask" action="#" method="get">
           <h3>Edit Task</h3>
           <input type="hidden" name="taskid" id="taskid" value="${task.id}">
           <div>
@@ -184,11 +219,11 @@ export default class Display {
           </div>
           <div>
             <label for="description">Description</label>
-            <input type="text" name="description" id="description" value="${task.getDescription()}"required>
+            <input type="text" name="description" id="description" value="${task.getDescription()}" required>
           </div>
           <div>
             <label for="duedate">Due Date</label>
-            <input type="date" name="duedate" id="duedate" value="${task.getDueDateYYYYMMDD()}"required>
+            <input type="date" name="duedate" id="duedate" value="${task.getDueDateYYYYMMDD()}" required>
           </div>
           <div>
             <label for="project">Project</label>
@@ -202,7 +237,7 @@ export default class Display {
       </div>
     `;
 
-    Display.addModalListeners();
+    Display.addEditModalListeners();
     modal.classList.add('visible');
   }
 
@@ -218,6 +253,10 @@ export default class Display {
 
   static handleLoadTask(e) {
     Display.loadTasks(this.dataset.id);
+  }
+
+  static addTask(e) {
+    Display.loadAddTaskModal(Display.currentid);
   }
 
   static toggleCompleted(e) {
@@ -266,14 +305,21 @@ export default class Display {
     } 
   }
 
-  static handleEditTaskForm(e) {
-    const form = document.getElementById("edittask");
-    Main.todolist.updateTask(form);
-    Display.hideEditTaskModal();
+  static handleAddTaskForm(e) {
+    const form = document.getElementById("addtask");
+    Main.todolist.addNewTask(form);
+    Display.hideModal();
     Display.loadTasks(Display.currentid);
   }
 
-  static hideEditTaskModal(e) {
+  static handleEditTaskForm(e) {
+    const form = document.getElementById("edittask");
+    Main.todolist.updateTask(form);
+    Display.hideModal();
+    Display.loadTasks(Display.currentid);
+  }
+
+  static hideModal(e) {
     const modal = document.querySelector('.modal');
     modal.classList.remove('visible');
   }
@@ -288,6 +334,7 @@ export default class Display {
     const addproject = document.querySelector('.addproject');
     const confirmaddproject = document.querySelector('.addprojectform .confirm');
     const canceladdproject = document.querySelector('.addprojectform .cancel');
+    const addtask = document.querySelector('.header .addtask');
 
     listall.addEventListener('click', Display.handleLoadTask);
     listtoday.addEventListener('click', Display.handleLoadTask);
@@ -295,6 +342,7 @@ export default class Display {
     addproject.addEventListener('click', Display.showAddProjectForm);
     confirmaddproject.addEventListener('click', Display.handleAddProjectForm);
     canceladdproject.addEventListener('click', Display.hideAddProjectForm);
+    addtask.addEventListener('click', Display.addTask);
   }
 
   static addProjectListeners() {
@@ -317,11 +365,20 @@ export default class Display {
     deletetasks.forEach((btn) => btn.addEventListener('click', Display.deleteTask));
   }
 
-  static addModalListeners() {
+  static addAddModalListeners() {
     const confirmtask = document.querySelector('.add .confirm');
     const canceltask = document.querySelector('.add .cancel');
 
+    confirmtask.addEventListener('click', Display.handleAddTaskForm);
+    canceltask.addEventListener('click', Display.hideModal);
+  }
+
+  static addEditModalListeners() {
+    const confirmtask = document.querySelector('.add .confirm');
+    const canceltask = document.querySelector('.add .cancel');
+    
+
     confirmtask.addEventListener('click', Display.handleEditTaskForm);
-    canceltask.addEventListener('click', Display.hideEditTaskModal);
+    canceltask.addEventListener('click', Display.hideModal);
   }
 }

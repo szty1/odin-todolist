@@ -78,6 +78,11 @@ export default class TodoList {
     }
   }
 
+  addNewTask(form) {
+    this.addTask(new Task(form.title.value, form.description.value, form.duedate.value, false));
+    LocalStorage.saveTodoList(this);
+  }
+
   updateTask(form) {
     const task = this.getTask(Number(form.taskid.value));
     task.setTitle(form.title.value);

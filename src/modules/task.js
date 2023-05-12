@@ -1,4 +1,4 @@
-import { format, formatRelative, parseISO } from 'date-fns'
+import { format, isValid, parseISO } from 'date-fns'
 
 export default class Task {
   // private static field stores next unique id
@@ -11,9 +11,9 @@ export default class Task {
   }
 
   constructor (title, description, dueDate, important) {
-    this.title = title;
+    this.title = (title != "") ? title : "New Task";
     this.description = description;
-    this.dueDate = new Date(dueDate);
+    this.dueDate = (isValid(dueDate)) ? new Date(dueDate) : new Date();
     this.id = String(Task.#getNextId());
     this.completed = false;
     this.important = important;
@@ -45,7 +45,11 @@ export default class Task {
   }
 
   setDueDate(dueDate) {
-    this.dueDate = parseISO(dueDate);
+    if (isValid(dueDate)) {
+      this.dueDate = parseISO(dueDate);
+    } else {
+      this.dueDate = new Date();
+    }
   }
 
   getFormattedDate() {
